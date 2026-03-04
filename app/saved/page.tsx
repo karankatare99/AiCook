@@ -57,7 +57,7 @@ export default function SavedPage() {
     if (error) return <SavedErrorState message={error} onRetry={refetch} />;
 
     return (
-        <div className="min-h-screen bg-[#0A0A0F] text-[#F5EDD6] p-4 md:p-8 md:pl-28 lg:pl-32 max-w-[1600px] mx-auto overflow-hidden">
+        <div className="min-h-screen bg-[#0A0A0F] text-[#F5EDD6] p-4 md:p-8 md:pl-28 lg:pl-32 max-w-400 mx-auto overflow-hidden">
             <SavedPageHeader count={recipes.length} />
 
             <SavedToolbar

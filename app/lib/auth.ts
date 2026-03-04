@@ -1,11 +1,7 @@
 import GoogleProvider from "next-auth/providers/google";
-import NextAuth, { NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth";
+import type { NextAuthConfig } from "next-auth";
 import { prisma } from "@/lib/prisma";
-
-interface User {
-  email: string,
-  name: string
-}
 
 export const authOptions: NextAuthConfig = {
   providers: [
@@ -15,23 +11,22 @@ export const authOptions: NextAuthConfig = {
     })
   ],
   pages: {
-    signIn: '/api/signin',
+    signIn: '/api/auth/signin',
   },
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "google" && user.email) {
         try {
-          const existingUser = await prisma.user.upsert({
+          await prisma.user.upsert({
             where: { email: user.email },
-            update: { name: user.name! },
+            update: { name: user.name!, profile: user.image },
             create: {
               name: user.name!,
-              email: user.email
+              email: user.email,
+              profile: user.image,
             }
           });
-          console.log("User:", existingUser.email);
-        } catch(e) {
-          console.log(e);
+        } catch (e) {
           return false;
         }
       }

@@ -11,7 +11,7 @@ export default function Sidebar() {
     const navItems = [
         { name: "Home", href: "/", icon: Home },
         { name: "Chat", href: "/chat", icon: MessageSquare },
-        { name: "Cookbook", href: "/app/saved", icon: Bookmark },
+        { name: "Cookbook", href: "/saved", icon: Bookmark },
     ];
 
     return (
@@ -59,7 +59,7 @@ export default function Sidebar() {
             </nav>
 
             {/* Mobile Bottom Tab Bar */}
-            <nav className="md:hidden fixed bottom-0 left-0 w-full h-20 bg-[#0A0A0F]/80 backdrop-blur-xl border-t border-[#F5EDD6]/10 z-[100] flex justify-around items-center px-4 pb-4 pt-2">
+            <nav className="md:hidden fixed bottom-0 left-0 w-full h-20 bg-[#0A0A0F]/80 backdrop-blur-xl border-t border-[#F5EDD6]/10 z-100 flex justify-around items-center px-4 pb-4 pt-2">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (
