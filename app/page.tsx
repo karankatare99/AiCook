@@ -1,4 +1,5 @@
-import FluidBackground from "@/components/FluidBackground";
+"use client";
+
 import VoiceOrb from "@/components/VoiceOrb";
 import HorizontalSplit from "@/components/animations/HorizontalSplit";
 import WavyText from "@/components/animations/WavyText";
@@ -7,13 +8,13 @@ import SubtleHighlight from "@/components/animations/SubtleHighlight";
 import Words3D from "@/components/animations/Words3D";
 import ExplodingCharacters from "@/components/animations/ExplodingCharacters";
 import Reveal from "@/components/Reveal";
-import { Sparkles, Paperclip, Send } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <main className="min-h-screen relative flex flex-col items-center pt-24 pb-32">
-      {/* Absolute webgl background */}
-      <FluidBackground />
 
       <div className="w-full max-w-300 px-6 z-10 flex flex-col items-center">
 
@@ -50,24 +51,33 @@ export default function Home() {
             </h2>
           </Reveal>
 
-          <Reveal variant="fade-up" delay={1.8} className="w-full mt-12">
-            <div className="w-full bg-surface/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl focus-within:border-primary/50 transition-colors">
-              <div className="flex items-center gap-3 text-text-muted mb-6">
-                <Sparkles className="w-5 h-5 text-primary" />
-                <input
-                  type="text"
-                  placeholder="Ask AI a question or make a request..."
-                  className="bg-transparent border-none outline-none w-full text-text placeholder:text-text-muted"
-                />
-              </div>
-              <div className="flex justify-between items-center mt-4">
-                <div className="flex gap-2">
-                </div>
-                <button className="w-8 h-8 rounded-lg bg-text text-bg flex items-center justify-center transition-transform hover:scale-105" data-cursor="link">
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+          <Reveal variant="fade-up" delay={1.8} className="w-full mt-12 flex justify-center">
+            <button
+              onClick={() => router.push("/chat")}
+              className="group flex items-center gap-3 px-6 py-[14px] bg-[#E8602C]/10 border border-[#E8602C]/35 rounded-[14px] backdrop-blur-md cursor-pointer w-fit mx-auto transition-all duration-200 hover:bg-[#E8602C]/20 hover:border-[#E8602C]/65 hover:-translate-y-[2px] active:translate-y-0 active:scale-[0.98]"
+            >
+              <span className="text-[#E8602C] shrink-0">
+                {/* Microphone SVG — 20px */}
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="1.5"
+                  strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <line x1="12" y1="19" x2="12" y2="22" />
+                </svg>
+              </span>
+              <span className="font-[family-name:var(--font-cormorant)] text-[18px] font-medium text-[#F5EDD6] tracking-[0.01em] whitespace-nowrap">
+                Chat with VoiceBite
+              </span>
+              <span className="text-[#F5EDD6]/45 shrink-0 ml-auto transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#E8602C]">
+                {/* Arrow right SVG — 16px */}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="1.5"
+                  strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </span>
+            </button>
           </Reveal>
         </section>
 
