@@ -11,7 +11,7 @@ export const authOptions: NextAuthConfig = {
     })
   ],
   pages: {
-    signIn: '/api/auth/signin',
+    signIn: '/auth/signin',
   },
   callbacks: {
     async signIn({ user, account }) {

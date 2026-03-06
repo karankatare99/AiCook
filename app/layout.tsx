@@ -8,6 +8,7 @@ import PageLoader from "@/components/PageLoader";
 import Sidebar from "@/components/Sidebar";
 import FluidBackground from "@/components/FluidBackground";
 import { ToastProvider } from "@/components/ToastSystem";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,19 +34,21 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${dmSans.variable} ${dmMono.variable} ${cormorant.variable} font-sans antialiased bg-[#0A0A0F] text-[#F5EDD6] selection:bg-[#E8602C]/20 selection:text-[#E8602C]`}
       >
-        <ToastProvider>
-          <PageLoader />
-          <CursorRenderer />
-          <FluidBackground />
-          <Sidebar />
-          <Suspense fallback={null}>
-            <SmoothScroll>
-              <div className="md:ml-20 min-h-screen pb-20 md:pb-0">
-                {children}
-              </div>
-            </SmoothScroll>
-          </Suspense>
-        </ToastProvider>
+        <SessionProvider>
+          <ToastProvider>
+            <PageLoader />
+            <CursorRenderer />
+            <FluidBackground />
+            <Sidebar />
+            <Suspense fallback={null}>
+              <SmoothScroll>
+                <div className="md:ml-20 min-h-screen pb-20 md:pb-0">
+                    {children}
+                </div>
+              </SmoothScroll>
+            </Suspense>
+          </ToastProvider>
+        </SessionProvider>
       </body>
     </html>
   );
