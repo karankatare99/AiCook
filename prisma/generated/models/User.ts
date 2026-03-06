@@ -145,7 +145,7 @@ export type UserGroupByOutputType = {
   id: string
   username: string
   email: string
-  profile: string
+  profile: string | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -173,7 +173,7 @@ export type UserWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   username?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  profile?: Prisma.StringFilter<"User"> | string
+  profile?: Prisma.StringNullableFilter<"User"> | string | null
   saved?: Prisma.SavedRecipeListRelationFilter
 }
 
@@ -181,7 +181,7 @@ export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   username?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  profile?: Prisma.SortOrder
+  profile?: Prisma.SortOrderInput | Prisma.SortOrder
   saved?: Prisma.SavedRecipeOrderByRelationAggregateInput
 }
 
@@ -192,7 +192,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   username?: Prisma.StringFilter<"User"> | string
-  profile?: Prisma.StringFilter<"User"> | string
+  profile?: Prisma.StringNullableFilter<"User"> | string | null
   saved?: Prisma.SavedRecipeListRelationFilter
 }, "id" | "email">
 
@@ -200,7 +200,7 @@ export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   username?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  profile?: Prisma.SortOrder
+  profile?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -213,14 +213,14 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   username?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
-  profile?: Prisma.StringWithAggregatesFilter<"User"> | string
+  profile?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
   id?: string
   username: string
   email: string
-  profile: string
+  profile?: string | null
   saved?: Prisma.SavedRecipeCreateNestedManyWithoutUserInput
 }
 
@@ -228,7 +228,7 @@ export type UserUncheckedCreateInput = {
   id?: string
   username: string
   email: string
-  profile: string
+  profile?: string | null
   saved?: Prisma.SavedRecipeUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -236,7 +236,7 @@ export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   saved?: Prisma.SavedRecipeUpdateManyWithoutUserNestedInput
 }
 
@@ -244,7 +244,7 @@ export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   saved?: Prisma.SavedRecipeUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -252,21 +252,21 @@ export type UserCreateManyInput = {
   id?: string
   username: string
   email: string
-  profile: string
+  profile?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -299,6 +299,10 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type UserCreateNestedOneWithoutSavedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSavedInput, Prisma.UserUncheckedCreateWithoutSavedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedInput
@@ -317,14 +321,14 @@ export type UserCreateWithoutSavedInput = {
   id?: string
   username: string
   email: string
-  profile: string
+  profile?: string | null
 }
 
 export type UserUncheckedCreateWithoutSavedInput = {
   id?: string
   username: string
   email: string
-  profile: string
+  profile?: string | null
 }
 
 export type UserCreateOrConnectWithoutSavedInput = {
@@ -347,14 +351,14 @@ export type UserUpdateWithoutSavedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateWithoutSavedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -435,7 +439,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     username: string
     email: string
-    profile: string
+    profile: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
