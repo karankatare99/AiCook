@@ -46,8 +46,3 @@ export { Prisma }
  * 
  */
 export type User = Prisma.UserModel
-/**
- * Model SavedRecipe
- * 
- */
-export type SavedRecipe = Prisma.SavedRecipeModel

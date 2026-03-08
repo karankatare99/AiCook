@@ -384,8 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  User: 'User',
-  SavedRecipe: 'SavedRecipe'
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,7 +400,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedRecipe"
+    modelProps: "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -479,80 +478,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    SavedRecipe: {
-      payload: Prisma.$SavedRecipePayload<ExtArgs>
-      fields: Prisma.SavedRecipeFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.SavedRecipeFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.SavedRecipeFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload>
-        }
-        findFirst: {
-          args: Prisma.SavedRecipeFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.SavedRecipeFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload>
-        }
-        findMany: {
-          args: Prisma.SavedRecipeFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload>[]
-        }
-        create: {
-          args: Prisma.SavedRecipeCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload>
-        }
-        createMany: {
-          args: Prisma.SavedRecipeCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.SavedRecipeCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload>[]
-        }
-        delete: {
-          args: Prisma.SavedRecipeDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload>
-        }
-        update: {
-          args: Prisma.SavedRecipeUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload>
-        }
-        deleteMany: {
-          args: Prisma.SavedRecipeDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.SavedRecipeUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.SavedRecipeUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload>[]
-        }
-        upsert: {
-          args: Prisma.SavedRecipeUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedRecipePayload>
-        }
-        aggregate: {
-          args: Prisma.SavedRecipeAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedRecipe>
-        }
-        groupBy: {
-          args: Prisma.SavedRecipeGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SavedRecipeGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.SavedRecipeCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SavedRecipeCountAggregateOutputType> | number
-        }
-      }
-    }
   }
 } & {
   other: {
@@ -602,16 +527,6 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const SavedRecipeScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  recipeId: 'recipeId',
-  savedAt: 'savedAt'
-} as const
-
-export type SavedRecipeScalarFieldEnum = (typeof SavedRecipeScalarFieldEnum)[keyof typeof SavedRecipeScalarFieldEnum]
-
-
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -653,20 +568,6 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime'
- */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -779,7 +680,6 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
-  savedRecipe?: Prisma.SavedRecipeOmit
 }
 
 /* Types for Logging */

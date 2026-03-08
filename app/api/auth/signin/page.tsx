@@ -38,7 +38,7 @@ function SignInContent() {
   // Redirect if authenticated
   useEffect(() => {
     if (status === "authenticated") {
-      router.replace("/app");
+      router.replace("/chat");
     }
   }, [status, router]);
 

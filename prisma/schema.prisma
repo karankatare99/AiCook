@@ -18,18 +18,4 @@ model User {
   username String
   email String @unique
   profile String?
-  saved SavedRecipe[]
-}
-
-model SavedRecipe {
-  id        String   @id @default(cuid())
-  userId    String
-  recipeId  String
-  savedAt   DateTime @default(now())
-
-  user      User     @relation(fields: [id], references: [id], onDelete: Cascade)
-
-  @@unique([id, recipeId])
-  @@index([id])
-  @@index([recipeId])
 }

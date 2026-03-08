@@ -156,7 +156,7 @@ export default function ChatPage() {
     }
 
     return (
-        <main className="flex flex-col h-[100dvh] pt-6 md:pt-12 max-w-4xl mx-auto w-full relative">
+        <main className="flex flex-col h-dvh pt-6 md:pt-12 max-w-4xl mx-auto w-full relative">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

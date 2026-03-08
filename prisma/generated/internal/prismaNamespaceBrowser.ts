@@ -51,8 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User',
-  SavedRecipe: 'SavedRecipe'
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -79,16 +78,6 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const SavedRecipeScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  recipeId: 'recipeId',
-  savedAt: 'savedAt'
-} as const
-
-export type SavedRecipeScalarFieldEnum = (typeof SavedRecipeScalarFieldEnum)[keyof typeof SavedRecipeScalarFieldEnum]
 
 
 export const SortOrder = {
