@@ -8,6 +8,7 @@ import MessageBubble, { MessageType } from "@/components/chat/MessageBubble";
 import TypingIndicator from "@/components/chat/TypingIndicator";
 import InputBar from "@/components/chat/InputBar";
 import VoiceModeOverlay from "@/components/chat/VoiceModeOverlay";
+import axios from "axios";
 
 const seedMessage = "Hey there 👋 I'm VoiceBite, your hands-free cooking assistant. Ask me anything — recipes, substitutions, timers, techniques. What are we making today?";
 
@@ -103,31 +104,25 @@ export default function ChatPage() {
         setIsTyping(true);
 
         // AI Response Sequence
-        setTimeout(() => {
+        setTimeout(async () => {
             setIsTyping(false);
             setIsStreaming(true);
 
-            const targetResponse = dummyResponses[responseIndex % dummyResponses.length];
+            const res = await axios.post("http://localhost:3000/api/chat", { prompt: text })
+            const currentText = res.data.response;
             setResponseIndex(prev => prev + 1);
 
-            let currentText = "";
-            let i = 0;
-
             const interval = setInterval(() => {
-                currentText += targetResponse.charAt(i);
                 setStreamingText(currentText);
-                i++;
-                if (i >= targetResponse.length) {
-                    clearInterval(interval);
-                    setIsStreaming(false);
-                    setMessages(prev => [...prev, {
-                        id: Date.now().toString() + "_ai",
-                        role: "assistant",
-                        content: targetResponse,
-                        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                    }]);
-                    setStreamingText("");
-                }
+                clearInterval(interval);
+                setIsStreaming(false);
+                setMessages(prev => [...prev, {
+                    id: Date.now().toString() + "_ai",
+                    role: "assistant",
+                    content: currentText,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                }]);
+                setStreamingText("");
             }, 12);
         }, 1400); // Dummy delay 1.4s
     };
