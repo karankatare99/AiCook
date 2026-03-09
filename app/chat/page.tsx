@@ -12,13 +12,6 @@ import axios from "axios";
 
 const seedMessage = "Hey there 👋 I'm VoiceBite, your hands-free cooking assistant. Ask me anything — recipes, substitutions, timers, techniques. What are we making today?";
 
-const dummyResponses = [
-    "Great choice! Carbonara is all about technique. You'll need guanciale, Pecorino Romano, eggs, and black pepper. The key is to keep the heat low when you add the egg mixture — you want silky, not scrambled. Want me to walk you through it step by step?",
-    "For a vegetarian swap, replace guanciale with smoked mushrooms or sun-dried tomatoes. They bring that savory depth without the meat. The rest of the technique stays the same.",
-    "I'd suggest starting the pasta water now — you'll want it at a rolling boil. While that heats up, dice your guanciale into small cubes and render it in a cold pan, no oil needed. Should I set a timer for the pasta?",
-    "Perfect! Setting a timer for 9 minutes for the spaghetti. I'll let you know when it's time to pull it. Meanwhile, whisk 3 egg yolks with a whole egg and a generous handful of Pecorino."
-];
-
 export default function ChatPage() {
     const { status, user } = useSession();
     const router = useRouter();
@@ -89,7 +82,7 @@ export default function ChatPage() {
         }
     }, [status, router]);
 
-    const handleSend = (text: string) => {
+    const handleSend = async (text: string) => {
         if (!text.trim() || isStreaming) return;
 
         // Append user message
@@ -103,28 +96,57 @@ export default function ChatPage() {
         setMessages(prev => [...prev, newUserMsg]);
         setIsTyping(true);
 
-        // AI Response Sequence
-        setTimeout(async () => {
-            setIsTyping(false);
-            setIsStreaming(true);
+        try {
+        // 2. Call API
+        const res = await axios.post("/api/chat", { prompt: text });
+        const fullResponse: string = res.data.response;
 
-            const res = await axios.post("http://localhost:3000/api/chat", { prompt: text })
-            const currentText = res.data.response;
-            setResponseIndex(prev => prev + 1);
+        // 3. Hide typing indicator, begin typewriter
+        setIsTyping(false);
+        setIsStreaming(true);
 
-            const interval = setInterval(() => {
-                setStreamingText(currentText);
+        let i = 0;
+        let currentText = "";
+
+        const interval = setInterval(() => {
+            currentText += fullResponse.charAt(i);
+            setStreamingText(currentText);
+            i++;
+
+            // 4. All characters done
+            if (i >= fullResponse.length) {
                 clearInterval(interval);
                 setIsStreaming(false);
+                setStreamingText("");
+
+                // 5. Commit to messages
                 setMessages(prev => [...prev, {
                     id: Date.now().toString() + "_ai",
                     role: "assistant",
-                    content: currentText,
-                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    content: fullResponse,
+                    timestamp: new Date().toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
                 }]);
-                setStreamingText("");
-            }, 12);
-        }, 1400); // Dummy delay 1.4s
+            }
+        }, 12);
+
+    } catch (e) {
+        setIsTyping(false);
+        setIsStreaming(false);
+        setStreamingText("");
+
+        setMessages(prev => [...prev, {
+            id: Date.now().toString() + "_err",
+            role: "assistant",
+            content: "Something went wrong. Please try again.",
+            timestamp: new Date().toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            })
+        }]);
+    }
     };
 
     const handleDismissVoiceMode = (transcript: string) => {
