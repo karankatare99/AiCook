@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
+    "typeRoots": ["./src/types", "./node_modules/@types"],
     "lib": [
       "dom",
       "dom.iterable",
@@ -35,7 +36,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "src",
   ],
   "exclude": [
     "node_modules"
