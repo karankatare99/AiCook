@@ -1,8 +1,9 @@
 "use client";
 
 import { memo } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import clsx from "clsx";
 
 export type MessageRole = "user" | "assistant";
@@ -50,42 +51,56 @@ function MessageBubble({ message, userImage, streaming }: MessageBubbleProps) {
                 duration: isUser ? 0.22 : 0.25
             }}
             className={clsx(
-                "flex w-full mb-6",
+                "flex w-full mb-8", // Increased bottom margin between messages
                 isUser ? "justify-end" : "justify-start"
             )}
         >
             <div className={clsx(
-                "flex gap-3 max-w-[85%] md:max-w-[75%]",
+                "flex gap-4 max-w-[90%] md:max-w-[80%]", // Slightly wider for better readability
                 isUser && "flex-row-reverse"
             )}>
                 {/* Avatar */}
                 {isUser ? <UserAvatar src={userImage} /> : <AssistantAvatar />}
 
                 {/* Bubble & Timestamp */}
-                <div className={clsx("flex flex-col gap-1", isUser ? "items-end" : "items-start")}>
+                <div className={clsx("flex flex-col gap-2", isUser ? "items-end" : "items-start")}>
                     <div
                         className={clsx(
-                            "text-[#F5EDD6] text-[15px] font-sans break-words",
+                            "text-[#F5EDD6] font-sans break-words shadow-sm",
                             isUser
-                                ? "bg-[#E8602C]/10 border border-[#E8602C]/25 backdrop-blur-[12px] rounded-[18px_18px_4px_18px] py-[14px] px-[18px]"
-                                : "bg-[#F5EDD6]/5 border border-[#F5EDD6]/10 backdrop-blur-[16px] rounded-[18px_18px_18px_4px] py-[16px] px-[20px]"
+                                ? "bg-[#E8602C]/10 border border-[#E8602C]/25 backdrop-blur-[12px] rounded-[20px_20px_4px_20px] py-[16px] px-[20px]"
+                                : "bg-[#F5EDD6]/5 border border-[#F5EDD6]/10 backdrop-blur-[16px] rounded-[20px_20px_20px_4px] py-[18px] px-[24px]"
                         )}
-                        style={{
-                            lineHeight: isUser ? 1.6 : 1.75
-                        }}
                     >
-                        {message.content}
+                        <div className="prose prose-invert max-w-none 
+                                        text-[15.5px] leading-[1.8]
+                                        selection:bg-[#E8602C]/30
+                                        prose-headings:font-['Cormorant_Garamond'] prose-headings:text-[#F5EDD6] 
+                                        prose-headings:font-semibold prose-headings:mt-6 prose-headings:mb-4
+                                        prose-p:text-[#F5EDD6]/90 prose-p:mb-5 last:prose-p:mb-0
+                                        prose-strong:text-[#E8602C] prose-strong:font-bold
+                                        prose-li:text-[#F5EDD6]/90 prose-li:my-2
+                                        prose-code:text-[#E8602C] prose-code:bg-[#E8602C]/10 
+                                        prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+                                        prose-code:before:content-none prose-code:after:content-none
+                                        prose-blockquote:border-l-[#E8602C] prose-blockquote:bg-white/5 
+                                        prose-blockquote:text-[#F5EDD6]/70 prose-blockquote:italic
+                                        prose-hr:border-[#F5EDD6]/10">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {message.content}
+                            </ReactMarkdown>
+                        </div>
                         {streaming && (
                             <motion.span
                                 animate={{ opacity: [1, 0] }}
                                 transition={{ repeat: Infinity, duration: 0.7, ease: "linear" }}
-                                className="inline-block ml-1 w-[2px] h-[1em] bg-[#E8602C] align-middle"
+                                className="inline-block ml-1 w-[2px] h-[1.1em] bg-[#E8602C] align-middle"
                             />
                         )}
                     </div>
 
                     {message.timestamp && (
-                        <span className="font-mono text-[10px] text-[#F5EDD6]/40 px-1">
+                        <span className="font-mono text-[11px] text-[#F5EDD6]/30 px-2">
                             {message.timestamp}
                         </span>
                     )}

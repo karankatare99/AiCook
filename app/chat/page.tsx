@@ -25,8 +25,6 @@ export default function ChatPage() {
     const [streamingText, setStreamingText] = useState("");
     const [isStreaming, setIsStreaming] = useState(false);
 
-    const [responseIndex, setResponseIndex] = useState(0);
-
     const scrollRef = useRef<HTMLDivElement>(null);
 
     // Welcome message typewriter on mount
