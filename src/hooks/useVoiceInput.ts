@@ -70,31 +70,31 @@ export function useVoiceInput({ onTranscript, onCancel } : UseVoiceInputProps) {
             }
         };
 
-            recognition.onend = () => {
-                if (cancelledRef.current) {
-                    setVoiceState("idle");
-                    setTranscript("");
-                    setInterimTranscript("");
-                    return;
-                }
+    recognition.onend = () => {
+        if (cancelledRef.current) {
+            setVoiceState("idle");
+            setTranscript("");
+            setInterimTranscript("");
+            return;
+        }
 
-                setVoiceState("done");
-            };
+        setVoiceState("done");
+    };
 
-            recognition.onerror = (event) => {
-                console.error("[useVoiceInput]", event.error);
+    recognition.onerror = (event) => {
+        console.error("[useVoiceInput]", event.error);
 
-                if (event.error === "no-speech") {
-                    setVoiceState("idle");
-                    return;
-                }
+        if (event.error === "no-speech") {
+            setVoiceState("idle");
+            return;
+        }
 
-                setVoiceState("idle");
-                setTranscript("");
-                setInterimTranscript("");
-            };
+        setVoiceState("idle");
+        setTranscript("");
+        setInterimTranscript("");
+    };
 
-            recognition.start();
+    recognition.start();
     }, [])
 
     const confirm = useCallback(() => {
