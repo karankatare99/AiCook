@@ -7,6 +7,7 @@ import clsx from "clsx";
 
 interface InputBarProps {
     onSend: (text: string) => void;
+    onStop: () => void; // New prop for stopping the AI
     isVoiceMode: boolean;
     onToggleVoiceMode: () => void;
     autoFillText?: string;
@@ -15,6 +16,7 @@ interface InputBarProps {
 
 export default function InputBar({
     onSend,
+    onStop,
     isVoiceMode,
     onToggleVoiceMode,
     autoFillText,
@@ -45,7 +47,14 @@ export default function InputBar({
 
     const handleSubmit = (e?: React.FormEvent) => {
         e?.preventDefault();
-        if (text.trim() && !isVoiceMode && !isStreaming) {
+        
+        // If streaming, the button acts as a stop trigger
+        if (isStreaming) {
+            onStop?.();
+            return;
+        }
+
+        if (text.trim() && !isVoiceMode) {
             onSend(text);
             setText("");
         }
@@ -90,7 +99,7 @@ export default function InputBar({
                         onChange={(e) => setText(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder={isVoiceMode ? "" : "Ask anything about cooking…"}
-                        disabled={isVoiceMode || isStreaming}
+                        disabled={isVoiceMode}
                         className={clsx(
                             "w-full h-full bg-transparent border-none outline-none text-[#F5EDD6] text-[15px] placeholder:text-[#F5EDD6]/40 transition-opacity duration-200",
                             isVoiceMode ? "opacity-0 pointer-events-none" : "opacity-100"
@@ -98,7 +107,7 @@ export default function InputBar({
                         style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
                     />
 
-                    {/* Shimmer effect when auto filling or unlocking */}
+                    {/* Shimmer effect when auto filling */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[14px]">
                         {autoFillText && (
                             <motion.div
@@ -112,21 +121,34 @@ export default function InputBar({
                 </form>
 
                 <div className="flex items-center ml-2 relative">
-                    <AnimatePresence>
+                    <AnimatePresence mode="wait">
                         {!isVoiceMode && (
                             <motion.button
-                                key="send-btn"
-                                initial={{ opacity: 0, scale: 0 }}
+                                key={isStreaming ? "stop-btn" : "send-btn"}
+                                initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
                                 whileHover={{ scale: 1.08, filter: "brightness(1.1)" }}
                                 whileTap={{ scale: 0.92 }}
                                 onClick={handleSubmit}
-                                disabled={!text.trim() || isStreaming}
-                                className="w-[44px] h-[44px] rounded-full bg-[#E8602C] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shrink-0 ml-2"
+                                // Button is disabled only if there's no text AND we aren't streaming
+                                disabled={!text.trim() && !isStreaming}
+                                className={clsx(
+                                    "w-[44px] h-[44px] rounded-full flex items-center justify-center shrink-0 ml-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed",
+                                    isStreaming ? "bg-[#F5EDD6]/10 border border-[#F5EDD6]/20" : "bg-[#E8602C]"
+                                )}
                                 data-cursor="link"
                             >
-                                <ArrowUp className="w-[18px] h-[18px] text-white stroke-[2.5]" />
+                                {isStreaming ? (
+                                    <motion.div
+                                        animate={{ scale: [1, 1.1, 1] }}
+                                        transition={{ repeat: Infinity, duration: 2 }}
+                                    >
+                                        <Square className="w-[14px] h-[14px] text-[#F5EDD6] fill-current" />
+                                    </motion.div>
+                                ) : (
+                                    <ArrowUp className="w-[18px] h-[18px] text-white stroke-[2.5]" />
+                                )}
                             </motion.button>
                         )}
                     </AnimatePresence>
@@ -136,11 +158,13 @@ export default function InputBar({
                         onClick={onToggleVoiceMode}
                         whileHover={!isVoiceMode ? { borderColor: "#E8602C", color: "#E8602C" } : {}}
                         whileTap={{ scale: 0.92 }}
+                        disabled={isStreaming}
                         className={clsx(
                             "w-[44px] h-[44px] rounded-full flex items-center justify-center shrink-0 ml-2 transition-colors relative z-10",
                             isVoiceMode
                                 ? "bg-[#E8602C] text-white border-transparent"
-                                : "bg-[#F5EDD6]/5 border border-[#F5EDD6]/15 text-[#F5EDD6]"
+                                : "bg-[#F5EDD6]/5 border border-[#F5EDD6]/15 text-[#F5EDD6]",
+                            isStreaming && "opacity-30 cursor-not-allowed"
                         )}
                         data-cursor="link"
                     >

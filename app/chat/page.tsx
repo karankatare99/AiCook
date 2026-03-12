@@ -26,6 +26,7 @@ export default function ChatPage() {
     const [isStreaming, setIsStreaming] = useState(false);
 
     const scrollRef = useRef<HTMLDivElement>(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const hasSentRef = useRef(false);
 
     // Welcome message typewriter on mount
@@ -107,14 +108,17 @@ export default function ChatPage() {
         let i = 0;
         let currentText = "";
 
-        const interval = setInterval(() => {
+        intervalRef.current = setInterval(() => {
             currentText += fullResponse.charAt(i);
             setStreamingText(currentText);
             i++;
 
             // 4. All characters done
             if (i >= fullResponse.length) {
-                clearInterval(interval);
+                if (intervalRef.current) {
+                    clearInterval(intervalRef.current);
+                    intervalRef.current = null;
+                }
                 setIsStreaming(false);
                 setStreamingText("");
 
@@ -146,6 +150,32 @@ export default function ChatPage() {
             })
         }]);
     }
+    };
+
+    const handleStop = () => {
+    // Stop the typewriter interval
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+
+        setIsStreaming(false);
+
+        // Commit whatever text was streamed so far as a complete message
+        setMessages(prev => {
+            if (!streamingText.trim()) return prev;
+            return [...prev, {
+                id: Date.now().toString() + "_ai",
+                role: "assistant" as const,
+                content: streamingText + "…", // ← trailing ellipsis shows it was cut short
+                timestamp: new Date().toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            }];
+        });
+
+        setStreamingText("");
     };
 
     const handleDismissVoiceMode = (transcript: string) => {
@@ -230,6 +260,7 @@ export default function ChatPage() {
 
             <InputBar
                 onSend={handleSend}
+                onStop={handleStop}
                 isVoiceMode={isVoiceMode}
                 onToggleVoiceMode={handleToggleVoiceMode}
                 autoFillText={autoFillText}
