@@ -17,6 +17,21 @@ export default async function Home() {
   let isUser = true;
 
   if (!session?.user) isUser = false;
+
+  const PROMPTS = [
+      "Vegan stir-fry recipe",
+      "How do I make pasta carbonara?",
+      "Quick 15 minute dinner ideas",
+      "What can I make with chicken and rice?",
+      "How do I caramelize onions?",
+      "Easy chocolate cake recipe",
+      "Best marinade for grilled salmon",
+      "How to make fluffy scrambled eggs",
+      "Vegetarian meal prep ideas",
+      "How do I make butter chicken?",
+  ];
+
+  const getRandomPrompt = () => PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
   return (
     <main className="min-h-screen relative flex flex-col items-center pt-24 pb-32">
 
@@ -70,12 +85,12 @@ export default async function Home() {
 
           <Reveal variant="fade-up" delay={0.1}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 content-center items-center">
-              <HorizontalSplit />
-              <WavyText />
-              <RainingLetters />
-              <Words3D />
-              <ExplodingCharacters />
-              <SubtleHighlight />
+              <HorizontalSplit text={getRandomPrompt()} />
+              <WavyText text={getRandomPrompt()} />
+              <RainingLetters text={getRandomPrompt()} />
+              <Words3D text={getRandomPrompt()} />
+              <ExplodingCharacters text={getRandomPrompt()} />
+              <SubtleHighlight text={getRandomPrompt()} />
             </div>
           </Reveal>
         </section>

@@ -2,9 +2,17 @@
 
 import { useEffect, useRef } from "react";
 import * as AnimeJS from "animejs";
+import { useRouter } from "next/navigation";
 
 export default function Words3D({ text = "Salad bowl recipe" }: { text?: string }) {
     const containerRef = useRef<HTMLElement>(null);
+    const router = useRouter();
+
+    const handleClick = () => {
+        // Store the prompt so chat page can pick it up on mount
+        sessionStorage.setItem("autoPrompt", text);
+        router.push("/chat");
+    };
 
     useEffect(() => {
         if (!containerRef.current) return;

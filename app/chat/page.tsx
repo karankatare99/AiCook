@@ -28,20 +28,36 @@ export default function ChatPage() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const hasSentRef = useRef(false);
+    const hasAutoPromptRef = useRef(false);
+
+    if (typeof window !== "undefined" && sessionStorage.getItem("autoPrompt")) {
+        hasAutoPromptRef.current = true;
+    }
+
+    useEffect(() => {
+        const autoPrompt = sessionStorage.getItem("autoPrompt");
+        if (autoPrompt && status === "authenticated") {
+            sessionStorage.removeItem("autoPrompt");
+            hasAutoPromptRef.current = true;  // ✅ set ref before welcome fires
+            const timer = setTimeout(() => {
+                handleSend(autoPrompt);
+            }, 500);  // ✅ reduced to 500ms — no welcome message to wait for
+            return () => clearTimeout(timer);
+        }
+    }, [status]);
 
     // Welcome message typewriter on mount
     useEffect(() => {
         if (status === "authenticated" && user) {
+            if (hasAutoPromptRef.current) return;  // ✅ check ref, not sessionStorage
+
             if (messages.length === 0 && !isStreaming) {
-                // Delay 300ms from load as per prompt "3. (300ms) Welcome message..."
-                // In reality, actual component mount delay + status load delay.
                 setIsStreaming(true);
                 let currentText = "";
                 let i = 0;
 
                 let customGreeting = seedMessage.replace("there", user.name.split(" ")[0] || "there");
 
-                // Wait 300ms before starting stream
                 const startTimer = setTimeout(() => {
                     const interval = setInterval(() => {
                         currentText += customGreeting.charAt(i);
@@ -58,7 +74,7 @@ export default function ChatPage() {
                             }]);
                             setStreamingText("");
                         }
-                    }, 14); // 14ms per char
+                    }, 14);
                     return () => clearInterval(interval);
                 }, 300);
                 return () => clearTimeout(startTimer);

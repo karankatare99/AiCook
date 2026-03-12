@@ -2,9 +2,17 @@
 
 import { useEffect, useRef } from "react";
 import * as AnimeJS from "animejs";
+import { useRouter } from "next/navigation";
 
 export default function SubtleHighlight({ text = "Chocolate cake recipe" }: { text?: string }) {
     const containerRef = useRef<HTMLElement>(null);
+    const router = useRouter();
+
+    const handleClick = () => {
+        // Store the prompt so chat page can pick it up on mount
+        sessionStorage.setItem("autoPrompt", text);
+        router.push("/chat");
+    };
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -43,7 +51,7 @@ export default function SubtleHighlight({ text = "Chocolate cake recipe" }: { te
     return (
         <article
             ref={containerRef}
-            className="flex flex-col justify-center items-center min-h-50 p-5 rounded-[1cqw] bg-[#2A2A2A] text-[#D0D0D0] transition-colors duration-250 ease-out hover:bg-[#303030] hover:cursor-default"
+            className="flex flex-col justify-center items-center min-h-50 p-5 rounded-[1cqw] bg-[#2A2A2A] text-[#D0D0D0] transition-colors duration-250 ease-out hover:bg-[#303030] hover:cursor-pointer"
         >
             <h2 className="text-center font-bold text-[clamp(20px,8cqw,30px)] will-change-transform">{text}</h2>
         </article>
