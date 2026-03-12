@@ -26,6 +26,7 @@ export default function ChatPage() {
     const [isStreaming, setIsStreaming] = useState(false);
 
     const scrollRef = useRef<HTMLDivElement>(null);
+    const hasSentRef = useRef(false);
 
     // Welcome message typewriter on mount
     useEffect(() => {
@@ -149,7 +150,16 @@ export default function ChatPage() {
 
     const handleDismissVoiceMode = (transcript: string) => {
         setIsVoiceMode(false);
-        setAutoFillText(transcript);
+        setAutoFillText("");
+
+        if (transcript.trim()) {
+            hasSentRef.current = true;
+            handleSend(transcript);   // fires directly, skips input bar
+        }
+
+        setTimeout(() => {
+            hasSentRef.current = false;
+        }, 1000);
     };
 
     const handleToggleVoiceMode = () => {
