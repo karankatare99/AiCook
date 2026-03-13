@@ -48,38 +48,40 @@ export default function ChatPage() {
 
     // Welcome message typewriter on mount
     useEffect(() => {
-        if (status === "authenticated" && user) {
-            if (hasAutoPromptRef.current) return;  // ✅ check ref, not sessionStorage
+        console.log("[welcome]", { status, user, hasAutoPrompt: hasAutoPromptRef.current, messagesLength: messages.length, isStreaming });
+        if (status !== "authenticated") return;
+        if (!user) return;
+        if (hasAutoPromptRef.current) return;
+        if (messages.length > 0) return;
 
-            if (messages.length === 0 && !isStreaming) {
-                setIsStreaming(true);
-                let currentText = "";
-                let i = 0;
+        setIsStreaming(true);
+        let currentText = "";
+        let i = 0;
 
-                let customGreeting = seedMessage.replace("there", user.name.split(" ")[0] || "there");
+        const customGreeting = seedMessage.replace("there", user.name.split(" ")[0] || "there");
 
-                const startTimer = setTimeout(() => {
-                    const interval = setInterval(() => {
-                        currentText += customGreeting.charAt(i);
-                        setStreamingText(currentText);
-                        i++;
-                        if (i >= customGreeting.length) {
-                            clearInterval(interval);
-                            setIsStreaming(false);
-                            setMessages([{
-                                id: "seed-1",
-                                role: "assistant",
-                                content: customGreeting,
-                                timestamp: "Just now"
-                            }]);
-                            setStreamingText("");
-                        }
-                    }, 14);
-                    return () => clearInterval(interval);
-                }, 300);
-                return () => clearTimeout(startTimer);
-            }
-        }
+        const startTimer = setTimeout(() => {
+            const interval = setInterval(() => {
+                currentText += customGreeting.charAt(i);
+                setStreamingText(currentText);
+                i++;
+                if (i >= customGreeting.length) {
+                    clearInterval(interval);
+                    setIsStreaming(false);
+                    setMessages([{
+                        id: "seed-1",
+                        role: "assistant",
+                        content: customGreeting,
+                        timestamp: "Just now"
+                    }]);
+                    setStreamingText("");
+                }
+            }, 14);
+            return () => clearInterval(interval);
+        }, 300);
+
+        return () => clearTimeout(startTimer);
+
     }, [status, user]);
 
     // Auto scroll
@@ -113,21 +115,21 @@ export default function ChatPage() {
         setIsTyping(true);
 
         try {
-        // 2. Call API
-        const res = await axios.post("/api/chat", { prompt: text });
-        const fullResponse: string = res.data.response;
+            // 2. Call API
+            const res = await axios.post("/api/chat", { prompt: text });
+            const fullResponse: string = res.data.response;
 
-        // 3. Hide typing indicator, begin typewriter
-        setIsTyping(false);
-        setIsStreaming(true);
+            // 3. Hide typing indicator, begin typewriter
+            setIsTyping(false);
+            setIsStreaming(true);
 
-        let i = 0;
-        let currentText = "";
+            let i = 0;
+            let currentText = "";
 
-        intervalRef.current = setInterval(() => {
-            currentText += fullResponse.charAt(i);
-            setStreamingText(currentText);
-            i++;
+            intervalRef.current = setInterval(() => {
+                currentText += fullResponse.charAt(i);
+                setStreamingText(currentText);
+                i++;
 
             // 4. All characters done
             if (i >= fullResponse.length) {
@@ -248,7 +250,7 @@ export default function ChatPage() {
                     <MessageBubble
                         key={msg.id}
                         message={msg}
-                        userImage={user?.image}
+                        userImage={user?.image ?? undefined}
                     />
                 ))}
 

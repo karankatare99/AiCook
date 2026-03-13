@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSession as useNextAuthSession } from "next-auth/react";
 
 export type SessionUser = {
     id: string;
@@ -14,26 +14,24 @@ export type Session = {
     status: "loading" | "authenticated" | "unauthenticated";
 };
 
-// Dummy session for VoiceBite
 export function useSession(): Session {
-    const [status, setStatus] = useState<Session["status"]>("loading");
-    const [user, setUser] = useState<SessionUser | null>(null);
+    const { data: session, status } = useNextAuthSession();
 
-    useEffect(() => {
-        // Simulate network delay to check loading states
-        const timer = setTimeout(() => {
-            setStatus("authenticated");
-            setUser({
-                id: "usr_123",
-                name: "Chef",
-                email: "chef@example.com",
-                // Standard dummy photo from Pravatar
-                image: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-            });
-        }, 400);
+    if (status === "loading") {
+        return { user: null, status: "loading" };
+    }
 
-        return () => clearTimeout(timer);
-    }, []);
+    if (status === "unauthenticated" || !session?.user) {
+        return { user: null, status: "unauthenticated" };
+    }
 
-    return { user, status };
+    return {
+        status: "authenticated",
+        user: {
+            id: session.user.id ?? "",
+            name: session.user.name ?? "",
+            email: session.user.email ?? "",
+            image: session.user.image ?? "",
+        },
+    };
 }
